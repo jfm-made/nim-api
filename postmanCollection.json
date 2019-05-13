@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "bd882f2a-d4de-45e9-9c16-ced3e9b5601e",
+		"name": "Nim Game",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Start",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:4263/nim/start?simple=true",
+					"host": [
+						"localhost"
+					],
+					"port": "4263",
+					"path": [
+						"nim",
+						"start"
+					],
+					"query": [
+						{
+							"key": "simple",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:4263/nim/status",
+					"host": [
+						"localhost"
+					],
+					"port": "4263",
+					"path": [
+						"nim",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Move",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"row\": 1,\n\t\"take\" : 1\n}"
+				},
+				"url": {
+					"raw": "localhost:4263/nim",
+					"host": [
+						"localhost"
+					],
+					"port": "4263",
+					"path": [
+						"nim"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:4263/nim",
+					"host": [
+						"localhost"
+					],
+					"port": "4263",
+					"path": [
+						"nim"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

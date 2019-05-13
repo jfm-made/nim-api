@@ -1,0 +1,5 @@
+{
+  "port": 4263,
+  "apiRoot": "/nim",
+  "startSituation": [1, 3, 5, 7]
+}
