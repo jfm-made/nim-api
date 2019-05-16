@@ -7,13 +7,6 @@ const logger = debug('nim:game-router');
 
 export default class GameRouterController {
 
-    private static sendNoGameFound(res: express.Response) {
-        return res.status(404).send({
-            error: 'Not found',
-            message: 'No active game found',
-        });
-    }
-
     private instance: NimGame | null = null;
     private readonly router: express.Router = express.Router();
     private readonly startSituation: number[];
@@ -21,10 +14,10 @@ export default class GameRouterController {
     constructor(startSituation: number[]) {
         this.startSituation = startSituation;
 
-        this.router.get('/', this.getStatus.bind(this));
         this.router.post('/', this.postStartGame.bind(this));
-        this.router.put('/', this.putPlayerMove.bind(this));
-        this.router.delete('/', this.deleteInstance.bind(this));
+        this.router.get('/', this.validateMiddleware.bind(this), this.getStatus.bind(this));
+        this.router.put('/', this.validateMiddleware.bind(this), this.putPlayerMove.bind(this));
+        this.router.delete('/', this.validateMiddleware.bind(this), this.deleteInstance.bind(this));
     }
 
     public getRouter() {
@@ -32,13 +25,29 @@ export default class GameRouterController {
     }
 
     private getStatus(req: express.Request, res: express.Response) {
+        if (this.instance === null) { throw new TypeError('Game instance must be initialized'); }
+
         logger('Status requested');
 
+        res.send(this.instance.getStatus());
+    }
+
+    private validateMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
         if (this.instance === null) {
-            return GameRouterController.sendNoGameFound(res);
+            return res.status(404).send({
+                error: 'Not found',
+                message: 'No game found',
+            });
         }
 
-        res.send(this.instance.getStatus());
+        if (this.instance.isGameOver()) {
+            return res.send({
+                error: 'Game Over',
+                message: `${this.instance.getStatus().playersChoice ? 'Computer' : 'You'} won`,
+            });
+        }
+
+        return next();
     }
 
     /**
@@ -74,24 +83,12 @@ export default class GameRouterController {
      * @param res
      */
     private putPlayerMove(req: express.Request, res: express.Response) {
+        if (this.instance === null) { throw new TypeError('Game instance must be initialized'); }
+
         if (!req || !req.body || typeof req.body.row !== 'number' || typeof req.body.take !== 'number') {
             return res.status(400).send({
                 error: 'Bad request',
                 message: 'Body must contain the attributes row and take.',
-            });
-        }
-
-        if (this.instance === null) {
-            return res.status(404).send({
-                error: 'Not found',
-                message: 'No game found',
-            });
-        }
-
-        if (this.instance.isGameOver()) {
-            return res.send({
-                error: 'Game Over',
-                message: `${this.instance.getStatus().playersChoice ? 'Computer' : 'You'} won`,
             });
         }
 
@@ -136,13 +133,9 @@ export default class GameRouterController {
      * @param res
      */
     private deleteInstance(req: express.Request, res: express.Response) {
-        if (this.instance !== null) {
-            logger('User deleted the game');
+        logger('User deleted the game');
 
-            this.instance = null;
-            return res.send({ message: 'Game deleted' });
-        }
-
-        return GameRouterController.sendNoGameFound(res);
+        this.instance = null;
+        return res.send({ message: 'Game deleted' });
     }
 }
