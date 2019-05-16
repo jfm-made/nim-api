@@ -17,7 +17,7 @@ export default class GameRouterController {
         this.router.post('/', this.postStartGame.bind(this));
         this.router.get('/', this.validateMiddleware.bind(this), this.getStatus.bind(this));
         this.router.put('/', this.validateMiddleware.bind(this), this.putPlayerMove.bind(this));
-        this.router.delete('/', this.validateMiddleware.bind(this), this.deleteInstance.bind(this));
+        this.router.delete('/', this.deleteInstance.bind(this));
     }
 
     public getRouter() {
