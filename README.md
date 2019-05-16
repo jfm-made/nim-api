@@ -34,19 +34,24 @@ Run ```npm run test```
 You can find a Postman collection (```postmanCollection.json```) which contains all available routes in this repository.  
 As base of all the following route the configured ```port``` and ```apiRoot``` are used. By default the base path is ```localhost:4263/nim```.  
 ### Start game
-Route: /start  
-Method: GET  
-Params:
-* simple (optional): If set 'true' the game mode is set to simple. Otherwise starts on hard mode.  
+Route: /  
+Method: POST  
+Body: 
+<pre>
+{
+	"mode": "simple"
+}
+</pre>
+Attribute mode is (optional): If set to 'simple' the game mode is set to simple. Otherwise starts on hard mode.  
 
 Starts a new game of NIM with the given game mode. If a game is already existing its overwritten by the new one.
 ### Get game status
-Route: /status  
+Route: /  
 Method: GET  
 Returns a formatted current game state as described on chapter [Returned game status JSON object](#returned-game-status-json-object)
 ### Make a move
 Route: /  
-Method: POST  
+Method: PUT  
 Body: 
 <pre>
 {
@@ -122,15 +127,15 @@ Playing the simple mode means that the computer will not make the perfect moves.
 
 After installation, build and run or development start you can start a new game with
 <pre>
-GET:http://localhost:4263/nim/start
+POST:http://localhost:4263/nim/
 </pre>
 To perform a game move you have to use
 <pre>
-POST:http://localhost:4263/nim
+PUT:http://localhost:4263/nim
 body: {
-      	"row": 3,
-      	"take" : 1
-      }
+    "row": 3,
+    "take" : 1
+}
 </pre>
 The response in JSON format will show the current game state and the last move which was performed by the player and the computer.  
 *If the configuration was changed the uris might differ.*

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bd882f2a-d4de-45e9-9c16-ced3e9b5601e",
+		"_postman_id": "5a26cddc-4bca-4652-b657-32efb8512542",
 		"name": "Nim Game",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -44,14 +44,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:4263/nim/status",
+					"raw": "localhost:4263/nim/",
 					"host": [
 						"localhost"
 					],
 					"port": "4263",
 					"path": [
 						"nim",
-						"status"
+						""
 					]
 				}
 			},
@@ -60,7 +60,7 @@
 		{
 			"name": "Move",
 			"request": {
-				"method": "POST",
+				"method": "PUT",
 				"header": [
 					{
 						"key": "Content-Type",

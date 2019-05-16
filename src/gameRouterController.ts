@@ -21,9 +21,9 @@ export default class GameRouterController {
     constructor(startSituation: number[]) {
         this.startSituation = startSituation;
 
-        this.router.get('/status', this.getStatus.bind(this));
-        this.router.get('/start', this.startGame.bind(this));
-        this.router.post('/', this.postPlayerMove.bind(this));
+        this.router.get('/', this.getStatus.bind(this));
+        this.router.post('/', this.postStartGame.bind(this));
+        this.router.put('/', this.putPlayerMove.bind(this));
         this.router.delete('/', this.deleteInstance.bind(this));
     }
 
@@ -45,9 +45,9 @@ export default class GameRouterController {
      * Starts a new nim game no matter if one is already existing
      * If query param 'simple' is set to 'true' the game mode is simple. Default game mode is hard
      */
-    private startGame(req: express.Request, res: express.Response) {
+    private postStartGame(req: express.Request, res: express.Response) {
         let gameMode = GameMode.hard;
-        if (req.query && req.query.simple && req.query.simple === 'true') {
+        if (req.body && req.body.mode && req.body.mode === 'simple') {
             gameMode = GameMode.simple;
         }
 
@@ -73,7 +73,7 @@ export default class GameRouterController {
      * @param req - body: { row: number, take: number }
      * @param res
      */
-    private postPlayerMove(req: express.Request, res: express.Response) {
+    private putPlayerMove(req: express.Request, res: express.Response) {
         if (!req || !req.body || typeof req.body.row !== 'number' || typeof req.body.take !== 'number') {
             return res.status(400).send({
                 error: 'Bad request',
