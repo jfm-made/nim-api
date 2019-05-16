@@ -32,6 +32,13 @@ export default class GameRouterController {
         res.send(this.instance.getStatus());
     }
 
+    /**
+     * Middleware to check if a game is existing or if its already over.
+     * A game that is over or non existing has no status and can't be deleted or changed
+     * @param req
+     * @param res
+     * @param next
+     */
     private validateMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
         if (this.instance === null) {
             return res.status(404).send({
@@ -92,10 +99,13 @@ export default class GameRouterController {
             });
         }
 
-        logger(`Player takes ${req.body.take} objects from stack ${req.body.row}`);
+        const row: number = req.body.row;
+        const take: number = req.body.take;
+
+        logger(`Player takes ${take} objects from stack ${row}`);
 
         try {
-            this.instance.playerMove(req.body.row, req.body.take);
+            this.instance.playerMove(row, take);
             const statusBefore = this.instance.getStatus();
 
             if (this.instance.isGameOver()) {
