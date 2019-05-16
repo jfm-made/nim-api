@@ -79,8 +79,8 @@ export default class NimGame {
 
     /**
      * This method tries to balance the state of the game to build up a winning position.
-     * It uses a rather brutal way to find a balanced state by picking the largest stack and subtracting
-     * one from it until the state is balanced. If that does not work it picks the next smaller one. If
+     * It uses a a bitwise way to calculate a balanced state by picking the largest stack first and subtracting
+     * the XOR difference and check its balanced afterwards. If that does not work it picks the next smaller one. If
      * the state was already balanced or a balancing was not possible (proven impossible) it returns false.
      * @return boolean - false if not possible to balance game stacks or if it is already balanced
      */
@@ -94,25 +94,25 @@ export default class NimGame {
             return false;
         }
 
+        const xorDifference = this.stacks.reduce((a, b) => a ^ b);
         const sorted: number[] = Array.from(this.stacks).sort();
 
         for (const max of sorted) {
             const modifiedGame: number[] = Array.from(this.stacks);
             const index: number = modifiedGame.indexOf(max);
+            const take = Math.abs(modifiedGame[index] - (xorDifference ^ modifiedGame[index]));
 
-            for (let j = max; j >= 0; j--) {
-                modifiedGame[index] = j;
+            modifiedGame[index] -= take;
 
-                if (modifiedGame.reduce((a, b) => a ^ b) === 0) { // isBalanced
-                    this.stacks = Array.from(modifiedGame);
-                    this.lastMove = {
-                        player: false,
-                        stack: index,
-                        take: max - j,
-                    };
+            if (modifiedGame.reduce((a, b) => a ^ b) === 0) { // isBalanced
+                this.stacks = Array.from(modifiedGame);
+                this.lastMove = {
+                    player: false,
+                    stack: index,
+                    take,
+                };
 
-                    return true;
-                }
+                return true;
             }
         }
 
