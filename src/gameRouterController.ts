@@ -82,7 +82,10 @@ export default class GameRouterController {
         }
 
         if (this.instance === null) {
-            return res.status(404).send('No game found');
+            return res.status(404).send({
+                error: 'Not found',
+                message: 'No game found',
+            });
         }
 
         if (this.instance.isGameOver()) {

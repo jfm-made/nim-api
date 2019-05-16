@@ -66,7 +66,6 @@ export default class NimGame {
      * @return boolean - true if game is balanced
      */
     public isBalanced(): boolean {
-        // tslint:disable-next-line:no-bitwise
         return this.stacks.reduce((a, b) => a ^ b) === 0;
     }
 
@@ -83,9 +82,9 @@ export default class NimGame {
      * It uses a rather brutal way to find a balanced state by picking the largest stack and subtracting
      * one from it until the state is balanced. If that does not work it picks the next smaller one. If
      * the state was already balanced or a balancing was not possible (proven impossible) it returns false.
-     * @return false | Array<number> - false if not possible or balanced game stacks
+     * @return boolean - false if not possible to balance game stacks or if it is already balanced
      */
-    public makeBalanced(): number[] | false {
+    public makeBalanced(): boolean {
         if (!this.stacks || this.stacks.length === 0) {
             throw new TypeError('No Game existing');
         }
@@ -104,7 +103,6 @@ export default class NimGame {
             for (let j = max; j >= 0; j--) {
                 modifiedGame[index] = j;
 
-                // tslint:disable-next-line:no-bitwise ... To solve that I need bitwise here!
                 if (modifiedGame.reduce((a, b) => a ^ b) === 0) { // isBalanced
                     this.stacks = Array.from(modifiedGame);
                     this.lastMove = {
@@ -113,7 +111,7 @@ export default class NimGame {
                         take: max - j,
                     };
 
-                    return modifiedGame;
+                    return true;
                 }
             }
         }
